@@ -40,7 +40,7 @@ export class BotAnalyzesService {
 
     await this.em.persistAndFlush(newEncuesta)
 
-    return { recommendedCareer, output } // Devuelve la carrera recomendada y el output completo
+    return { recommendedCareer, output }
   }
 
   async findAll() {
