@@ -13,7 +13,7 @@ export class BotAnalyzesService {
   async create(createBotAnalyzeDto: CreateBotAnalyzeDto) {
     const output = await this.model.zeroShotClassification({
       inputs: createBotAnalyzeDto.encuesta,
-      model: 'facebook/bart-large-mnli', // Cambio de modelo
+      model: 'facebook/bart-large-mnli',
       parameters: {
         candidate_labels: [
           'Ingeniería Civil',
@@ -24,7 +24,6 @@ export class BotAnalyzesService {
         ],
       },
     })
-    // Encuentra la carrera con el score más alto
     const maxScoreIndex = output[0].scores.indexOf(
       Math.max(...output[0].scores),
     )
