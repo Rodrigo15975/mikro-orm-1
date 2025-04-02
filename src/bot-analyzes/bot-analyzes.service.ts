@@ -54,10 +54,6 @@ export class BotAnalyzesService {
     })
   }
 
-  update(id: number, updateBotAnalyzeDto: UpdateBotAnalyzeDto) {
-    return `This action updates a #${id} botAnalyze`
-  }
-
   remove(id: number) {
     return `This action removes a #${id} botAnalyze`
   }
