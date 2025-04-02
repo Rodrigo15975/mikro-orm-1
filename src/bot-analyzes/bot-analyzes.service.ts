@@ -54,10 +54,6 @@ export class BotAnalyzesService {
     })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} botAnalyze`
-  }
-
   update(id: number, updateBotAnalyzeDto: UpdateBotAnalyzeDto) {
     return `This action updates a #${id} botAnalyze`
   }
