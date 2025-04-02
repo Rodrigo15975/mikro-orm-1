@@ -53,8 +53,4 @@ export class BotAnalyzesService {
       ],
     })
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} botAnalyze`
-  }
 }
