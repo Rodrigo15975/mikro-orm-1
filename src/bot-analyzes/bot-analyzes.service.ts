@@ -27,9 +27,6 @@ export class BotAnalyzesService {
     const maxScoreIndex = output[0].scores.indexOf(
       Math.max(...output[0].scores),
     )
-    Logger.debug({
-      maxScoreIndex,
-    })
     const recommendedCareer = output[0].labels[maxScoreIndex]
 
     const newEncuesta = this.em.create(BotAnalyze, {
