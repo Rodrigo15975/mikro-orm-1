@@ -1,6 +1,6 @@
 import { HfInference } from '@huggingface/inference'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { CreateBotAnalyzeDto } from './dto/create-bot-analyze.dto'
 import { BotAnalyze } from './entities/bot-analyze.entity'
 import { HuggingFaceInference } from '@langchain/community/llms/hf'
@@ -44,14 +44,15 @@ export class BotAnalyzesService {
     const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
-    // 2️⃣ Generar respuesta con Mixtral-8x7B
+    // Formatear el input con los valores text y sentiment
     const formattedInput = await promptTemplate.format({
       text: text, // Debe estar presente
       sentiment: sentiment, // Sentimiento también debe estar presente
     })
 
-    console.log('Formatted Input:', formattedInput) // Log para ver si se está generando correctamente
+    Logger.debug('Formatted Input:', formattedInput) // Log para ver si se está generando correctamente
 
+    // Llamada al chain con el input formateado
     const response: ChainValues = await this.chain.call({
       input: formattedInput, // Pasar solo el input al chain
     })
