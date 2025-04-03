@@ -18,9 +18,7 @@ export class BotAnalyzesService {
         candidate_labels: [
           'Ingeniería Civil',
           'Medicina',
-          'Arte',
           'Ingeniería de Software',
-          'Arquitectura',
         ],
       },
     })
