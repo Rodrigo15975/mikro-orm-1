@@ -45,7 +45,7 @@ export class BotAnalyzesService {
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
     // 2️⃣ Generar respuesta con Mixtral-8x7B
-    const formattedInput = promptTemplate.format({
+    const formattedInput = await promptTemplate.format({
       text: text, // Debe estar presente
       sentiment: sentiment, // Sentimiento también debe estar presente
     })
