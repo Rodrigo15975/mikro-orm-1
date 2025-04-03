@@ -39,7 +39,7 @@ export class BotAnalyzesService {
 
   constructor(private readonly em: EntityManager) {}
 
-  sync evaluate({ text }: { text: string }) {
+  async evaluate({ text }: { text: string }) {
     // 1️⃣ Analizar sentimiento con Hugging Face
     const sentimentResult = await this.sentimentModel.textClassification({
       model: 'cardiffnlp/twitter-roberta-base-sentiment-latest',
@@ -65,14 +65,14 @@ export class BotAnalyzesService {
       input: {
         text: text,
         sentiment: sentiment,
-      }
+      },
     })
 
     // 4️⃣ Devolver los resultados: texto original, sentimiento y respuesta generada
     return {
       text,
       sentiment,
-      response: response.text, // Asegúrate de que la respuesta sea accesible como texto
+      response, // Asegúrate de que la respuesta sea accesible como texto
     }
   }
 
