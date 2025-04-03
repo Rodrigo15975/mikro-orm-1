@@ -1,6 +1,6 @@
 import { HfInference } from '@huggingface/inference'
 import { EntityManager } from '@mikro-orm/postgresql'
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateBotAnalyzeDto } from './dto/create-bot-analyze.dto'
 import { BotAnalyze } from './entities/bot-analyze.entity'
 @Injectable()
