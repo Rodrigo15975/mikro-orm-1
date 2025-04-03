@@ -1,13 +1,13 @@
 import { HfInference } from '@huggingface/inference'
-import { EntityManager } from '@mikro-orm/postgresql'
-import { Injectable, Logger } from '@nestjs/common'
-import { CreateBotAnalyzeDto } from './dto/create-bot-analyze.dto'
-import { BotAnalyze } from './entities/bot-analyze.entity'
 import { HuggingFaceInference } from '@langchain/community/llms/hf'
-import { ConversationChain } from 'langchain/chains'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { ChainValues } from '@langchain/core/utils/types'
+import { EntityManager } from '@mikro-orm/postgresql'
+import { Injectable } from '@nestjs/common'
+import { ConversationChain } from 'langchain/chains'
 import { BufferMemory } from 'langchain/memory'
+import { CreateBotAnalyzeDto } from './dto/create-bot-analyze.dto'
+import { BotAnalyze } from './entities/bot-analyze.entity'
 const promptTemplate = PromptTemplate.fromTemplate(`
   El usuario dijo: "{text}".
   El sentimiento detectado es: {sentiment}.
@@ -51,20 +51,10 @@ export class BotAnalyzesService {
     const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
-    // 2️⃣ Formatear el prompt con los datos obtenidos
-    const formattedInput = await promptTemplate.format({
-      text: text,
-      sentiment: sentiment,
-    })
-
-    Logger.debug({
-      formattedInput,
-    })
-
     // 3️⃣ Generar la respuesta del modelo a partir del texto y sentimiento
     const response: ChainValues = await this.chain.call({
-      text: text, // Clave principal que la memoria usará
-      sentiment: sentiment, // Variable adicional para el prompt
+      text, // Clave principal que la memoria usará
+      sentiment, // Variable adicional para el prompt
     })
 
     // 4️⃣ Devolver los resultados: texto original, sentimiento y respuesta generada
