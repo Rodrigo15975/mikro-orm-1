@@ -43,11 +43,15 @@ export class BotAnalyzesService {
     // Obtener el sentimiento dominante
     const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
+    // 2️⃣ Crear el template para el prompt
+    const promptTemplate = PromptTemplate.fromTemplate(
+      `El usuario dijo: "{text}". El sentimiento detectado es: {sentiment}. ¿Cómo podrías responder a esta situación de forma empática y útil?`,
+    )
 
-    // Formatear el input con los valores text y sentiment
+    // Asegurarnos de que el texto y el sentimiento no estén vacíos antes de formatear
     const formattedInput = await promptTemplate.format({
-      text: text, // Debe estar presente
-      sentiment: sentiment, // Sentimiento también debe estar presente
+      text: text || '', // Aseguramos que el valor de text no sea null
+      sentiment: sentiment || '', // Aseguramos que el valor de sentiment no sea null
     })
 
     Logger.debug('Formatted Input:', formattedInput) // Log para ver si se está generando correctamente
