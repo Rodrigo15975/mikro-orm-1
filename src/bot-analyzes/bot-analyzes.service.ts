@@ -7,14 +7,7 @@ import { HuggingFaceInference } from '@langchain/community/llms/hf'
 import { ConversationChain } from 'langchain/chains'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { ChainValues } from '@langchain/core/utils/types'
-
-// Template del prompt con formato de variables dentro de las llaves dobles
 const promptTemplate = PromptTemplate.fromTemplate(`
-  {{
-    "text": "{text}",
-    "sentiment": "{sentiment}"
-  }}
-
   El usuario dijo: "{text}".
   El sentimiento detectado es: {sentiment}.
   ¿Cómo podrías responder a esta situación de forma empática y útil?
@@ -50,7 +43,7 @@ export class BotAnalyzesService {
     const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
-    // 2️⃣ Formatear el prompt con los datos obtenidos, usando la estructura {{"key": "value"}} para las variables
+    // 2️⃣ Formatear el prompt con los datos obtenidos
     const formattedInput = await promptTemplate.format({
       text: text,
       sentiment: sentiment,
@@ -62,17 +55,15 @@ export class BotAnalyzesService {
 
     // 3️⃣ Generar la respuesta del modelo a partir del texto y sentimiento
     const response: ChainValues = await this.chain.call({
-      input: {
-        text: text,
-        sentiment: sentiment,
-      },
+      text: text,
+      sentiment: sentiment,
     })
 
     // 4️⃣ Devolver los resultados: texto original, sentimiento y respuesta generada
     return {
       text,
       sentiment,
-      response, // Asegúrate de que la respuesta sea accesible como texto
+      response, // Asegúrate de extraer el texto de la respuesta si es necesario
     }
   }
 
