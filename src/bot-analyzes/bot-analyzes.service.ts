@@ -48,10 +48,14 @@ export class BotAnalyzesService {
         model: 'cardiffnlp/twitter-roberta-base-sentiment-latest',
         inputs: textToUse,
       })
-
       // Obtener el sentimiento dominante
       const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
       const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
+      Logger.debug({
+        sortedResults,
+        sentimentResult,
+        sentiment,
+      })
 
       // 2️⃣ Crear el template para el prompt
       const promptTemplate = PromptTemplate.fromTemplate(
