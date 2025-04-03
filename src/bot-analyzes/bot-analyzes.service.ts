@@ -44,12 +44,16 @@ export class BotAnalyzesService {
     const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
     const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
-    // Combina el texto y el sentimiento en una sola entrada
-    const combinedInput = `${text} Sentimiento: ${sentiment}`
-
     // 2️⃣ Generar respuesta con Mixtral-8x7B
+    const formattedInput = promptTemplate.format({
+      text: text, // Debe estar presente
+      sentiment: sentiment, // Sentimiento también debe estar presente
+    })
+
+    console.log('Formatted Input:', formattedInput) // Log para ver si se está generando correctamente
+
     const response: ChainValues = await this.chain.call({
-      input: combinedInput, // Usa un solo valor de entrada
+      input: formattedInput, // Pasar solo el input al chain
     })
 
     return {
