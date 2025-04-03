@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { BotAnalyzesService } from './bot-analyzes.service'
 import { CreateBotAnalyzeDto } from './dto/create-bot-analyze.dto'
-import { UpdateBotAnalyzeDto } from './dto/update-bot-analyze.dto'
 
 @Controller('bot-analyzes')
 export class BotAnalyzesController {
@@ -20,26 +11,13 @@ export class BotAnalyzesController {
     return this.botAnalyzesService.create(createBotAnalyzeDto)
   }
 
+  @Post('evaluate')
+  evaluate(@Body() createBotAnalyzeDto: { text: string }) {
+    return this.botAnalyzesService.evaluate(createBotAnalyzeDto)
+  }
+
   @Get()
   findAll() {
     return this.botAnalyzesService.findAll()
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.botAnalyzesService.findOne(+id)
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateBotAnalyzeDto: UpdateBotAnalyzeDto,
-  ) {
-    return this.botAnalyzesService.update(+id, updateBotAnalyzeDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.botAnalyzesService.remove(+id)
   }
 }
