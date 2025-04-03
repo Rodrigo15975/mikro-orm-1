@@ -25,9 +25,16 @@ export class BotAnalyzesService {
     temperature: 0.8,
     maxTokens: 200,
   })
+
+  // Configurar la memoria explícitamente
+  private readonly memory = new BufferMemory({
+    inputKey: 'text', // Especificar que 'text' es la clave de entrada principal
+  })
+
   private readonly chain: ConversationChain = new ConversationChain({
     llm: this.chatModel,
     prompt: promptTemplate,
+    memory: this.memory, // Pasar la memoria personalizada
   })
 
   constructor(private readonly em: EntityManager) {}
@@ -55,8 +62,8 @@ export class BotAnalyzesService {
 
     // 3️⃣ Generar la respuesta del modelo a partir del texto y sentimiento
     const response: ChainValues = await this.chain.call({
-      text: text,
-      sentiment: sentiment,
+      text: text, // Clave principal que la memoria usará
+      sentiment: sentiment, // Variable adicional para el prompt
     })
 
     // 4️⃣ Devolver los resultados: texto original, sentimiento y respuesta generada
