@@ -7,6 +7,7 @@ import { HuggingFaceInference } from '@langchain/community/llms/hf'
 import { ConversationChain } from 'langchain/chains'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { ChainValues } from '@langchain/core/utils/types'
+import { BufferMemory } from 'langchain/memory'
 const promptTemplate = PromptTemplate.fromTemplate(`
   El usuario dijo: "{text}".
   El sentimiento detectado es: {sentiment}.
