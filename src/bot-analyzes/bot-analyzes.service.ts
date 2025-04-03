@@ -26,16 +26,13 @@ export class BotAnalyzesService {
       Math.max(...output[0].scores),
     )
     const recommendedCareer = output[0].labels[maxScoreIndex]
-
     const newEncuesta = this.em.create(BotAnalyze, {
       encuesta: createBotAnalyzeDto.encuesta,
     })
 
     await this.em.persistAndFlush(newEncuesta)
-
     return { recommendedCareer, output }
   }
-
   async findAll() {
     return await this.em.findAll(BotAnalyze.name, {
       cache: true,
