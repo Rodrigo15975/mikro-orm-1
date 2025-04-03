@@ -7,6 +7,7 @@ import { HuggingFaceInference } from '@langchain/community/llms/hf'
 import { ConversationChain } from 'langchain/chains'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { ChainValues } from '@langchain/core/utils/types'
+import { logger } from '@mikro-orm/nestjs'
 
 const promptTemplate = PromptTemplate.fromTemplate(`
   El usuario dijo: "{text}".
@@ -33,56 +34,31 @@ export class BotAnalyzesService {
 
   constructor(private readonly em: EntityManager) {}
 
-  async evaluate({ text }: { text: string | string[] }) {
-    try {
-      // Verificar si 'text' es un array, en cuyo caso lo convertimos en una cadena
-      const textToUse = Array.isArray(text) ? text.join(' ') : text
+  async evaluate({ text }: { text: string }) {
+    // 1️⃣ Analizar sentimiento con Hugging Face
+    const sentimentResult = await this.sentimentModel.textClassification({
+      model: 'cardiffnlp/twitter-roberta-base-sentiment-latest',
+      inputs: text,
+    })
 
-      // Verificar que el texto no esté vacío o nulo
-      if (!textToUse || textToUse.trim() === '') {
-        throw new Error('El texto está vacío o no se ha proporcionado.')
-      }
+    // Obtener el sentimiento dominante
+    const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
+    const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
 
-      // 1️⃣ Analizar sentimiento con Hugging Face
-      const sentimentResult = await this.sentimentModel.textClassification({
-        model: 'cardiffnlp/twitter-roberta-base-sentiment-latest',
-        inputs: textToUse,
-      })
-      // Obtener el sentimiento dominante
-      const sortedResults = sentimentResult.sort((a, b) => b.score - a.score)
-      const sentiment = sortedResults[0].label // 'negative', 'neutral', 'positive'
-      Logger.debug({
-        sortedResults,
-        sentimentResult,
-        sentiment,
-      })
-
-      // 2️⃣ Crear el template para el prompt
-      const promptTemplate = PromptTemplate.fromTemplate(
-        `El usuario dijo: "{text}". El sentimiento detectado es: {sentiment}. ¿Cómo podrías responder a esta situación de forma empática y útil?`,
-      )
-
-      // Asegurarnos de que el texto y el sentimiento no estén vacíos antes de formatear
-      const formattedInput = await promptTemplate.format({
-        text: textToUse || '', // Aseguramos que el valor de text no sea null
-        sentiment: sentiment || '', // Aseguramos que el valor de sentiment no sea null
-      })
-
-      console.log('Formatted Input:', formattedInput) // Log para ver si se está generando correctamente
-
-      // Llamada al chain con el input formateado
-      const response: ChainValues = await this.chain.call({
-        input: formattedInput, // Pasar solo el input al chain
-      })
-
-      return {
-        text: textToUse,
-        sentiment,
-        response,
-      }
-    } catch (error) {
-      console.error('Error en la evaluación del bot:', error)
-      throw error // Puedes manejar el error de la manera que prefieras
+    const formattedInput = await promptTemplate.format({
+      text: text,
+      sentiment: sentiment,
+    })
+    Logger.debug({
+      formattedInput,
+    })
+    const response: ChainValues = await this.chain.call({
+      text: 'Hola',
+    })
+    return {
+      text,
+      sentiment,
+      response,
     }
   }
 
