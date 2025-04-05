@@ -57,7 +57,6 @@ export class BotAnalyzesService {
       sentiment, // Variable adicional para el prompt
     })
 
-    // 4️⃣ Devolver los resultados: texto original, sentimiento y respuesta generada
     return {
       text,
       sentiment,
