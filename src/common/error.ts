@@ -3,7 +3,6 @@ type Props = {
   stack?: string
   status?: number
 }
-
 export function CustomError(error: unknown): Props {
   if (typeof error === 'object' && error !== null) {
     const { message, stack, status } = error as Record<string, unknown>
