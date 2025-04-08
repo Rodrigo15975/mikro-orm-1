@@ -4,7 +4,6 @@ import { Logger } from '@nestjs/common'
 dotenv.config()
 const logger = new Logger('MikroORM')
 logger.debug('Loading MikroORM configuration...')
-
 export default defineConfig({
   clientUrl: process.env.DATABASE_URL,
   dbName: 'neondb',
