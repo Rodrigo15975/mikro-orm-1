@@ -1,4 +1,3 @@
-// import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs'
 import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql'
 
 import * as dotenv from 'dotenv'
