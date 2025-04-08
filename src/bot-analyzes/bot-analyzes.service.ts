@@ -60,7 +60,7 @@ export class BotAnalyzesService {
     return {
       text,
       sentiment,
-      response, // Asegúrate de extraer el texto de la respuesta si es necesario
+      response,
     }
   }
 
