@@ -1,9 +1,7 @@
 import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql'
-
 import * as dotenv from 'dotenv'
 import { Logger } from '@nestjs/common'
 dotenv.config()
-
 const logger = new Logger('MikroORM')
 logger.debug('Loading MikroORM configuration...')
 
